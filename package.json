@@ -1,0 +1,24 @@
+{
+  "name": "task_app_node_mongo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lalhming-muana/Task_App_Node_Mongo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lalhming-muana/Task_App_Node_Mongo/issues"
+  },
+  "homepage": "https://github.com/lalhming-muana/Task_App_Node_Mongo#readme",
+  "dependencies": {
+    "mongodb": "^5.0.1",
+    "mongoose": "^6.9.1"
+  }
+}

@@ -1,6 +1,22 @@
 
 // CRUD create read update delete
+/**
+ * this code works for version 6 after creating the database at the required path
+ * 
+ * const MongoClient = require('mongodb').MongoClient
+//const MongoClient = mongodb.MongoClient
 
+const connectionURL = 'mongodb://127.0.0.1:27017'
+const databaseName = 'task-manager'
+
+const client = MongoClient.connect(connectionURL);
+
+console.log('connection complete')
+
+
+ * 
+ * 
+ */
 
 const mongoose = require("mongoose");
 const mongodb = require('mongodb')

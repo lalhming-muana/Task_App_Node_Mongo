@@ -3,26 +3,15 @@
 /**
  * this code works for version 6 after creating the database at the required path
  * 
- * const MongoClient = require('mongodb').MongoClient
-//const MongoClient = mongodb.MongoClient
-
-const connectionURL = 'mongodb://127.0.0.1:27017'
-const databaseName = 'task-manager'
-
-const client = MongoClient.connect(connectionURL);
-
-console.log('connection complete')
-
-
- * 
- * 
- */
+ **/
 
 const mongoose = require("mongoose");
 const mongodb = require('mongodb')
 mongoose.set('strictQuery',false);
-const databaseName = 'task-manager'
-const connectionUrl =  "mongodb://localhost:27017/databaseName" 
+
+const databaseName = 'task-manager-api'
+const connectionUrl =  `mongodb://localhost:27017/${databaseName}`
+
 mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true},  (error, client) => {
     if (error) {
         return console.log('Unable to connect to database!')
@@ -33,23 +22,35 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
    
 });
 
-const User = mongoose.model('User' , {
-    name:{
+
+
+/*
+ Create a model for tasks.
+ Make description and completed fields.
+ Create a new instance of the model.     
+ Save the model to the database
+ Test your work.
+ */
+
+ const taskSchema = new mongoose.Schema({
+    desription: { 
         type: String
     },
-    age:{
-        type: Number
+    completed: {
+        type: Boolean
     }
-})
+ })
 
-const me = new User({
-    name: 'Howard',
-    age: 7
-})
+ const Task = mongoose.model('tasks', taskSchema);
+ 
+ const task = new Task({
+    desription: 'Learn DSA',
+    completed: true
+ })
 
-me.save().then(()=>{
-    console.log(me);
-}).catch((error)=>{
-    console.log('Error!',error);
-})
+ task.save().then(()=>{
+    console.log(task);
+ }).catch((error)=>{
+    console.log('Error unabale to insert to the database',error);
+ })
 

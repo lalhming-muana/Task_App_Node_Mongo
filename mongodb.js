@@ -7,6 +7,7 @@
 
 const mongoose = require("mongoose");
 const mongodb = require('mongodb')
+const validator = require('validator')
 mongoose.set('strictQuery',false);
 
 const databaseName = 'task-manager-api'
@@ -32,24 +33,50 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
  Test your work.
  */
 
- const taskSchema = new mongoose.Schema({
-    desription: { 
-        type: String
-    },
-    completed: {
-        type: Boolean
+ const userSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
+      trim: true
+         },
+  
+    age: {
+      type: Number,
+      required: true,
+      default: 0,
+      validate(value){
+        if(value<0){
+          throw new Error('Age cannot be a negative number');
+        }
+      }
+      },
+  
+      
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(value){
+        if(!validator.isEmail(value)){
+            throw new Error('Email is not valid. Enter the email again')
+        }
+      }
+  
     }
- })
+    
+  });
 
- const Task = mongoose.model('tasks', taskSchema);
+ const User = mongoose.model('tasks', userSchema);
  
- const task = new Task({
-    desription: 'Learn DSA',
-    completed: true
+ const user = new User({
+    name: '  Howard thantluanga',
+    age: 7,
+    email: '  THANTHANA@Gmail.com'
  })
 
- task.save().then(()=>{
-    console.log(task);
+ user.save().then(()=>{
+    console.log(user);
  }).catch((error)=>{
     console.log('Error unabale to insert to the database',error);
  })

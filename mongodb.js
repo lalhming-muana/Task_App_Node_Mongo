@@ -1,5 +1,9 @@
 
 // CRUD create read update delete
+/**
+ * this code works for version 6 after creating the database at the required path
+ * 
+ **/
 
 const mongoose = require("mongoose");
 const mongodb = require('mongodb')
@@ -19,27 +23,6 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
 });
 
 
-// A model is something which models the real world
-
-// const User = mongoose.model('User' , {
-//     name:{
-//         type: String
-//     },
-//     age:{
-//         type: Number
-//     }
-// })
-
-// const me = new User({
-//     name: 'Howard',
-//     age: 7
-// })
-
-// me.save().then(()=>{
-//     console.log(me);
-// }).catch((error)=>{
-//     console.log('Error!',error);
-// })
 
 /*
  Create a model for tasks.
@@ -48,6 +31,7 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
  Save the model to the database
  Test your work.
  */
+
  const taskSchema = new mongoose.Schema({
     desription: { 
         type: String

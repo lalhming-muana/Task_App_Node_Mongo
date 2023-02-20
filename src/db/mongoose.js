@@ -63,16 +63,30 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
         }
       }
   
+    },
+
+    password: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+        minLength: 6,
+        validate(value){
+            if(value.toLowerCase().includes('password')){
+                throw new Error(' Dont use password as your password')
+            }
+        }
     }
     
   });
 
- const User = mongoose.model('tasks', userSchema);
+ const User = mongoose.model('user', userSchema);
  
  const user = new User({
     name: '  Howard thantluanga',
     age: 7,
-    email: '  THANTHANA@Gmail.com'
+    email: '  THANTHANA@Gmail.com',
+    password: 'thanthana@123#'
  })
 
  user.save().then(()=>{
@@ -81,3 +95,29 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
     console.log('Error unabale to insert to the database',error);
  })
 
+
+
+ const Task = mongoose.model('tasks', {
+    description: {
+        type: String,
+        required: true,
+        trim: true,
+
+
+    },
+    completed: {
+        type: Boolean,
+        default: false,
+    }
+ });
+
+ const task = new Task({
+    description: 'Learn mongoose library',
+    completed: false
+ })
+
+ task.save().then(()=>{
+    console.log(task);
+ }).catch((error)=>{
+    console.log('Cannot insert the data into the database',error);
+ })

@@ -25,62 +25,10 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
 
 
 
-/*
- Create a model for tasks.
- Make description and completed fields.
- Create a new instance of the model.     
- Save the model to the database
- Test your work.
- */
 
- const userSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      required: true,
-      trim: true
-         },
-  
-    age: {
-      type: Number,
-      required: true,
-      default: 0,
-      validate(value){
-        if(value<0){
-          throw new Error('Age cannot be a negative number');
-        }
-      }
-      },
-  
-      
-    email: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-      validate(value){
-        if(!validator.isEmail(value)){
-            throw new Error('Email is not valid. Enter the email again')
-        }
-      }
-  
-    },
+ 
 
-    password: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true,
-        minLength: 6,
-        validate(value){
-            if(value.toLowerCase().includes('password')){
-                throw new Error(' Dont use password as your password')
-            }
-        }
-    }
-    
-  });
-
- const User = mongoose.model('user', userSchema);
+/* 
  
  const user = new User({
     name: '  Howard thantluanga',
@@ -95,7 +43,7 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
     console.log('Error unabale to insert to the database',error);
  })
 
-
+*/
 
  const Task = mongoose.model('tasks', {
     description: {
@@ -110,7 +58,7 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
         default: false,
     }
  });
-
+/*
  const task = new Task({
     description: 'Learn mongoose library',
     completed: false
@@ -121,3 +69,5 @@ mongoose.connect(connectionUrl, { useNewUrlParser: true,useUnifiedTopology: true
  }).catch((error)=>{
     console.log('Cannot insert the data into the database',error);
  })
+
+ */

@@ -9,7 +9,14 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 
 app.post('/users', (req, res)=>{
-    res.send('Testing app')
+    const user = new User(req.body)
+
+    user.save().then(()=>{
+        res.send(user)
+    }).catch((e)=>{
+        
+    })
+    
 })
 
 app.listen(port,()=>{

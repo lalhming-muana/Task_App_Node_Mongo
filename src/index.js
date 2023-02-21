@@ -10,7 +10,8 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 
 
-// CRUD  create this part creates an user
+// CRUD  - this part creates an user
+
 app.post('/users', async(req, res)=>{
     const user = new User(req.body)
     try{
@@ -58,6 +59,35 @@ app.get('/users/:id', async(req,res)=>{
     
 })
 
+
+// patch is used to update things
+app.patch('/users/:id', async(req, res)=>{
+    
+    const updates = Object.keys(req.body) // this stores each field of the req body as elements of an array
+    const allowedUpdates =['name','age','passoword','age'];
+
+    // every() is an array function that returns if every element returns true
+    const isValidOperation = updates.every((update)=>{
+        return allowedUpdates.includes(update)
+    })
+
+    if(!isValidOperation){
+        return res.status(400).send({ "error": "Invalid updates"});
+    }
+
+    try{
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+
+        if(!user){
+            return dres.status(400).send();
+        }
+        res.status(200).send(user)
+
+    }catch(e){
+        res.status(400).send(e);
+    }
+
+})
 
 
 // Create a task

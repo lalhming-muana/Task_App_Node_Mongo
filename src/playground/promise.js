@@ -16,8 +16,8 @@ const User = require('../models/user')
 
 
 const updateAgeAndCount= async(id, age)=>{
-    const user = await User.findByIdAndUpdate(id,{age});
-    const count = await User.countDocuments({age});
+    const user = await User.findByIdAndUpdate(id,{age}); // here {age: age} can be written as {age}
+    const count = await User.countDocuments({age}); // here {age: age} can be written as {age}
     return count;
 }
 

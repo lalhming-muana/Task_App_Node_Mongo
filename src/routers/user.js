@@ -54,7 +54,7 @@ router.get('/users/:id', async(req,res)=>{
 router.patch('/users/:id', async(req, res)=>{
     
     const updates = Object.keys(req.body) // this stores each field of the req body as elements of an array
-    const allowedUpdates =['name','age','passoword','age'];
+    const allowedUpdates =['name','age','password','email'];
 
     // every() is an array function that returns if every element returns true
     const isValidOperation = updates.every((update)=>{
@@ -66,12 +66,18 @@ router.patch('/users/:id', async(req, res)=>{
     }
 
     try{
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
-
-        if(!user){
-            return res.status(400).send();
+        const user = await User.findById(req.params.id);
+ 
+        if (!user) {
+            return res.status(404).send(user);
         }
-        res.status(200).send(user)
+ 
+        updates.forEach((update) => user[update] = req.body[update]);
+ 
+        await user.save();
+         
+        //const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+  
 
     }catch(e){
         res.status(400).send(e);

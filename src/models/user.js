@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 mongoose.set('strictQuery',false);
 
@@ -47,12 +48,36 @@ const userSchema = new mongoose.Schema({
               throw new Error(' Dont use password as your password')
           }
       }
-  }
+  },
+
+  tokens:[{
+    token:{
+      type: String,
+      required: true
+    }
+  }]
   
 });
 
 
-//logging in user
+// Authenticate an user when he logs in
+// .methods are used on instance of a model not on the model itself
+
+userSchema.methods.generateAuthToken = async function(){
+  const user = this;
+  const token = jwt.sign({_id: user._id.toString()},'webtoken')
+  user.tokens = user.tokens.concat({token})
+  await user.save();
+  return token;
+
+
+}
+
+
+
+
+// logging in user .sttics is used on the Models not on the instance of the model
+
 userSchema.statics.findByCredentials = async (email, password)=>{
   
   const user = await User.findOne({email})
@@ -75,7 +100,8 @@ userSchema.statics.findByCredentials = async (email, password)=>{
 
 
 
-// hash the user password before saving
+// Hash the user password before saving
+
 userSchema.pre('save', async function(next){
   const user = this
 

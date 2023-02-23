@@ -7,8 +7,10 @@ router.post('/users', async(req, res)=>{
     try{
         // await allows you to get a promise and if resolved run the code below
         
-        await user.save();         //here saving doesn't return anything so, no assigment needed  
-        res.status(201).send(user)
+        await user.save();   //here saving doesn't return anything so, no assigment needed  
+
+        const token = user.generateAuthToken()
+        res.status(201).send({user, token})
 
     } catch(error){
         res.status(400).send(error)
@@ -21,7 +23,8 @@ router.post('/users/login', async(req, res)=>{
 
     try{
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        res.send(user)
+        const token = user.generateAuthToken()
+        res.send({user, token})
 
     }catch(error){
         res.status(400).send(error);

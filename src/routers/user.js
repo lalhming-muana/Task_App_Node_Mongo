@@ -1,121 +1,89 @@
 const express = require('express')
-const router = express.Router()
 const User = require('../models/user')
+const auth = require('../middleware/auth')
+const router = new express.Router()
 
-router.post('/users', async(req, res)=>{
+
+router.post('/users', async (req, res) => {
     const user = new User(req.body)
-    try{
-        // await allows you to get a promise and if resolved run the code below
-        
-        await user.save();   //here saving doesn't return anything so, no assigment needed  
 
-        const token = user.generateAuthToken()
-        res.status(201).send({user, token})
-
-    } catch(error){
-        res.status(400).send(error)
-    }   
-    
-})
-
-
-router.post('/users/login', async(req, res)=>{
-
-    try{
-        const user = await User.findByCredentials(req.body.email, req.body.password)
-        const token = user.generateAuthToken()
-        res.send({user, token})
-
-    }catch(error){
-        res.status(400).send(error);
-    }
-
-})
-
-
-
-
-//CRUD read this part reads all users
-router.get('/users', async(req, res)=>{
-    
-    try{
-    const users = await User.find({});
-    res.status(200).send(users);
-    } catch(error){
-        res.status(500).send(error)
-    }
-            
-})
-
-
-// Read one user
-router.get('/users/:id', async(req,res)=>{
-    
-    const _id = req.params.id
-
-    try{
-        const user= await User.findById(_id);
-        
-        if(!user){
-            return res.status(500).send()
-        }
-        res.status(200).send(user)
-    }catch(e){
+    try {
+        await user.save()
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
+    } catch (e) {
         res.status(400).send(e)
     }
+})
 
+router.post('/users/login', async (req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        const token = await user.generateAuthToken()
+        res.send({ user, token })
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+
+router.get('/users/me', auth , async (req, res) => {
+   
+    res.send(req.user)
     
 })
 
+router.get('/users/:id', async (req, res) => {
+    const _id = req.params.id
 
-// patch is used to update things
-router.patch('/users/:id', async(req, res)=>{
-    
-    const updates = Object.keys(req.body) // this stores each field of the req body as elements of an array
-    const allowedUpdates =['name','age','password','email'];
+    try {
+        const user = await User.findById(_id)
 
-    // every() is an array function that returns if every element returns true
-    const isValidOperation = updates.every((update)=>{
-        return allowedUpdates.includes(update)
-    })
+        if (!user) {
+            return res.status(404).send()
+        }
 
-    if(!isValidOperation){
-        return res.status(400).send({ "error": "Invalid updates"});
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.patch('/users/:id', async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['name', 'email', 'password', 'age']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates!' })
     }
 
-    try{
+    try {
         const user = await User.findById(req.params.id)
 
         updates.forEach((update) => user[update] = req.body[update])
         await user.save()
- 
+
         if (!user) {
-            return res.status(404).send(user);
+            return res.status(404).send()
         }
- 
-              
-        //const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
+
         res.send(user)
-
-    }catch(e){
-        res.status(400).send(e);
+    } catch (e) {
+        res.status(400).send(e)
     }
-
 })
 
+router.delete('/users/:id', async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id)
 
-router.delete('/users/:id', async(req, res)=>{
-    try{
-        const user= await User.findByIdAndDelete(req.params.id)
-        
-        if(!user){
-            return res.status(404).send();
+        if (!user) {
+            return res.status(404).send()
         }
 
-        res.status(200).send(user)
-
-    } catch(e){
-        res.status(400).send(e);
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
     }
 })
 

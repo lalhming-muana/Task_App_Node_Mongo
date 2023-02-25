@@ -23,9 +23,9 @@ const port = process.env.PORT || 3000
 
 // })
 
-app.use((req,res,next)=>{
-    res.status(503).send('Website is under maintainance, please login after one hour')
-})
+// app.use((req,res,next)=>{
+//     res.status(503).send('Website is under maintainance, please login after one hour')
+// })
 
 
 app.use(express.json())
@@ -46,8 +46,8 @@ const tokenFunction = async ()=>{
     token = jwt.sign({_id: "jsonid"},'webtoken',{expiresIn: '7 days'});
     console.log(token);
 
-    const payLoad = jwt.verify(token,'webtoken');
-    console.log(payLoad);
+    const data = jwt.verify(token,'webtoken');
+    console.log(data);
 }
 
 tokenFunction();

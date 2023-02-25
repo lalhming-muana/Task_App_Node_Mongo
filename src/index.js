@@ -11,6 +11,23 @@ const app = express()
 
 const port = process.env.PORT || 3000
 
+// Here we will define our custom middleware function 
+// app.use((req, res, next)=>{
+   
+//     if(req.method === 'GET'){
+//         res.send('You are not permitted to use HTTP GET request  ');
+//     }
+//     else{
+//         next();
+//     }
+
+// })
+
+app.use((req,res,next)=>{
+    res.status(503).send('Website is under maintainance, please login after one hour')
+})
+
+
 app.use(express.json())
 app.use(userRouter)
 app.use(taskRouter)
